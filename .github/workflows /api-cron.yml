@@ -1,0 +1,37 @@
+name: API Call and File Push
+
+on:
+  schedule:
+    - cron: '0 */12 * * *'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  api_job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Git
+      run: |
+        git config user.email "github-actions@github.com"
+        git config user.name "GitHub Actions"
+
+    - name: API Call and File Push
+      run: |
+        API_URL='https://script.google.com/macros/s/AKfycbwlF-48Bu_6EGpF5sn8875VwPS5PD-ZLdpA57NpHtfy2raK9BDVwuMaPh431DeXBVuo/exec?sheet=main&action=read'
+        FILE_FORMAT="response.json"
+        FILE_PATH="${GITHUB_WORKSPACE}/${FILE_FORMAT}"
+
+        # Make API call and save response to a temporary file
+        TEMP_FILE=$(mktemp)
+        curl -sL "${API_URL}" > "${TEMP_FILE}"
+
+        # Replace the contents of response.json with the temporary file
+        mv "${TEMP_FILE}" "${FILE_PATH}"
+
+        # Commit and push the updated file to GitHub
+        git add "${FILE_PATH}"
+        git commit -m "Update API response file ${FILE_FORMAT}"
+        git push origin main  # Replace 'main' with your branch name
