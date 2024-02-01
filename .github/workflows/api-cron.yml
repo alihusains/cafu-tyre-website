@@ -22,7 +22,7 @@ jobs:
       run: |
         API_URL='https://script.google.com/macros/s/AKfycbwlF-48Bu_6EGpF5sn8875VwPS5PD-ZLdpA57NpHtfy2raK9BDVwuMaPh431DeXBVuo/exec?sheet=main&action=read'
         FILE_FORMAT="response.json"
-        FILE_PATH="${GITHUB_WORKSPACE}/${FILE_FORMAT}"
+        FILE_PATH="${GITHUB_WORKSPACE}/docs/${FILE_FORMAT}"
 
         # Make API call and save response to a temporary file
         TEMP_FILE=$(mktemp)
